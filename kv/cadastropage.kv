@@ -1,0 +1,81 @@
+<CadastroPage>:
+    FloatLayout:
+        canvas:
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: "icones/bg1.png"
+
+        Label:
+            pos_hint: {"right": 0.85 , "top": 0.95}
+            size_hint: 0.7, 0.1
+            text:"Cadastro"
+
+        ScrollView:
+            pos_hint:{"right": 0.9 ,"top": 0.75}
+            size_hint: 0.8,0.49
+            GridLayout:
+                cols:1
+                id: cadastro_profissional
+                size_hint_y: None
+                spacing: 2,2
+                height: self.minimum_height
+                row_default_height: "50dp"
+                row_force_default: True
+                TextInput:
+                    id: nome_completo
+                    hint_text: "Nome Completo"
+
+                TextInput:
+                    id: email
+                    hint_text: "Email"
+
+                TextInput:
+                    id: senha
+                    password: True
+                    hint_text: "Senha"
+
+                TextInput:
+                    id: data_nascimento
+                    hint_text: "Data Nascimento apenas números '08081992'"
+
+                TextInput:
+                    id: cpf
+                    hint_text: "Cpf apenas números"
+
+                TextInput:
+                    id: whatapp
+                    hint_text: "Whatapp com DDD"
+        Label:
+            id: mensagem_cadastro
+            text: "[color=#00CFDB]Faça seu cadastro[/color]"
+            bold: True
+            markup: True
+            pos_hint: {"right": 0.9 , "top": 0.27}
+            size_hint: 0.8, 0.1
+
+        # Botão Cadastrar
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            on_release: app.firebase.criar_conta(email.text, senha.text,nome_completo.text,cpf.text,data_nascimento.text,whatapp.text)
+            text: "Criar Conta"
+            pos_hint: {"right": 0.95 , "top": 0.16}
+            size_hint: 0.4, 0.10
+
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+
+            on_release:print("fazer login")
+            text: "Faça seu Login"
+            pos_hint: {"right": 0.45 , "top": 0.16}
+            size_hint: 0.4, 0.10

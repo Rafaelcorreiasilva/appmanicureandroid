@@ -1,0 +1,73 @@
+<EstoquePage>:
+    FloatLayout:
+        canvas:
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source:"icones/bg1.png"
+        Label:
+            pos_hint: {"right": 1 , "top":1}
+            size_hint: 1, 0.05
+            text:"Estoque"
+            id: estoque
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            pos_hint: {"right": 0.95 , "top": 0.30}
+            size_hint: 0.4, 0.2
+            text: "Entrada"
+            on_release:  app.mudar_tela('entradapage')
+
+
+
+
+
+
+        # Botões de Entrada e Retirada
+
+        LabelButton:
+            pos_hint: {"right": 0.45 , "top": 0.30}
+            size_hint: 0.4, 0.2
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            text: "Retirar"
+            on_release: app.mudar_tela('retiradapage')
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            on_release:  app.mudar_tela('inicialpage')
+            text: "voltar"
+            pos_hint: {"right": 0.25 , "top": 0.15}
+            size_hint: 0.25, 0.15
+
+        Label:
+            id: total_estoque
+            text: 'Total em estoque R$ '
+            markup: True
+            bold: True
+            pos_hint:{"right": 0.33 ,"top": 0.85}
+            size_hint: 0.2,0.1
+
+         #Scroll Estoque
+        ScrollView:
+            pos_hint:{"right": 0.9 ,"top": 0.75}
+            size_hint: 0.8,0.45
+            GridLayout:
+                cols:1
+                id: estoque_lista
+                size_hint_y: None
+                spacing: 3,3
+                height: self.minimum_height
+                row_default_height: "50dp"
+                row_force_default: True

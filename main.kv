@@ -1,0 +1,85 @@
+#:include kv/ajustespage.kv
+#:include kv/agenda/agendapage.kv
+#:include kv/agenda/cancelamentopage.kv
+#:include kv/agenda/agendamentopage.kv
+#:include kv/cliente/perfilclientepage.kv
+#:include kv/cliente/cadastroclientepage.kv
+#:include kv/estoque/cadastroprodutopage.kv
+#:include kv/estoque/retiradapage.kv
+#:include kv/estoque/entradapage.kv
+#:include kv/estoque/estoquepage.kv
+#:include kv/inicialpage.kv
+#:include kv/loginpage.kv
+#:include kv/cadastropage.kv
+#:import utils kivy.utils
+
+FloatLayout:
+    canvas:
+        Color:
+            rgb: utils.get_color_from_hex("#BE3455")
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    ScreenManager:
+        id: screen_manager
+
+        LoginPage:
+            name: "loginpage"
+            id: loginpage
+        CadastroPage:
+            name: "cadastropage"
+            id: cadastropage
+
+        InicialPage:
+            name: "inicialpage"
+            id: inicialpage
+
+        PerfilClientePage:
+            name: "perfilclientepage"
+            id: perfilclientepage
+
+        CadastroClientePage:
+            name:"cadastroclientepage"
+            id: cadastroclientepage
+
+
+        AjustesPage:
+            name: "ajustespage"
+            id: ajustespage
+
+
+        #Páginas da Agenda
+        CancelamentoPage:
+            name: "cancelamentopage"
+            id: cancelamentopage
+        AgendaPage:
+            name: "agendapage"
+            id: agendapage
+        AgendamentoPage:
+            name: "agendamentopage"
+            id:agendamentopage
+
+        #Páginas estoque
+        EstoquePage:
+            name: "estoquepage"
+            id: estoquepage
+
+        RetiradaPage:
+            name: "retiradapage"
+            id: retiradapage
+
+        EntradaPage:
+            name: "entradapage"
+            id: entradapage
+
+
+        CadastroProdutoPage:
+            name: "cadastroprodutopage"
+            id: cadastroprodutopage
+
+        #Página Dashboad
+        DashboardPage:
+            name: "dashboardpage"
+            id: dashboardpage
+

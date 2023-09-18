@@ -1,0 +1,89 @@
+<CadastroClientePage>:
+    FloatLayout:
+        canvas:
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: "icones/bg1.png"
+
+        Label:
+            pos_hint: {"right": 0.85 , "top": 0.95}
+            size_hint: 0.7, 0.1
+            text:"Cadastro Cliente"
+
+        ScrollView:
+            pos_hint:{"right": 0.9 ,"top": 0.75}
+            size_hint: 0.8,0.49
+            GridLayout:
+                cols:1
+                id: estoque_lista
+                size_hint_y: None
+                spacing: 2,2
+                height: self.minimum_height
+                row_default_height: "50dp"
+                row_force_default: True
+
+                TextInput:
+                    id: nome_completo
+                    hint_text: "Nome Completo"
+
+                TextInput:
+                    id: cpf
+                    hint_text: "Cpf"
+
+                TextInput:
+                    id: email
+                    hint_text: "Email"
+
+                TextInput:
+                    id: data_nascimento
+                    hint_text: "Data Nascimento"
+
+
+                TextInput:
+                    id: whatsapp
+                    hint_text: "Whatapp com DDD"
+
+                TextInput:
+                    id: endereco
+                    hint_text: "Rua com número"
+                TextInput:
+                    id: bairro
+                    hint_text: "Bairro"
+
+                TextInput:
+                    id: cidade
+                    hint_text: "Cidade"
+                TextInput:
+                    id: estado
+                    hint_text: "Estado"
+
+                TextInput:
+                    id:cep
+                    hint_text: "Cep apenas numeros"
+
+        Label:
+            id: mensagem_cadastro
+            text: "[color=#00CFDB]Cadastre seu cliente[/color]"
+            bold: True
+            markup: True
+            pos_hint: {"right": 0.9 , "top": 0.27}
+            size_hint: 0.8, 0.1
+
+
+        # Botão Cadastrar
+        Button:
+            pos_hint: {"right": 0.66, "top": 0.15}
+            size_hint: 0.33, 0.14
+            text:"Cadastrar"
+            #source: "icones/settings.png"
+            on_release: app.cadastracliente.cadastrar_cliente(nome_completo.text, email.text, endereco.text, bairro.text, data_nascimento.text, cidade.text, estado.text, cpf.text, whatsapp.text,app.local_id)
+
+        # Botão voltar
+        Button:
+        #ImageButton:
+            pos_hint: {"right": 0.2, "top": 0.10}
+            size_hint: 0.18, 0.08
+            text:"voltar"
+            #source: "icones/voltar.png"
+            on_release: app.mudar_tela("perfilclientepage")

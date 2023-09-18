@@ -1,0 +1,108 @@
+<InicialPage>:
+    FloatLayout:
+
+        canvas:
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source:"icones/bg1.png"
+
+        # Foto de perfil
+        Image:
+            pos_hint:{"right": 1 ,"top": 0.9 }
+            size_hint:1, 0.2
+            source:"icones/fotos_perfil/foto1.png"
+
+        # Informações
+
+
+        GridLayout:
+
+            pos_hint:{"right": 1 ,"top": 0.60 }
+            size_hint: 0.5 , 0.10
+            rows:3
+            cols:1
+
+            Label:
+                #pos_hint:{"right": 0.9 ,"top": 0.63 }
+                #size_hint: 0.6 , 0.08
+                text:"Agatha Silva da Cruz"
+                id: id_cliente
+            Label:
+                #pos_hint:{"right": 0.9 ,"top": 0.63 }
+                #ize_hint: 0.6 , 0.08
+                text:" Pé e Mão "
+                id: id_servico
+            Label:
+
+                #pos_hint:{"right": 0.5 ,"top": 0.63 }
+                #size_hint: 0.9 , 0.08
+                text:f"15:00 20/08"
+                id: id_horario_agendado
+
+             # Botãoconfiguração
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            on_release: app.mudar_tela("ajustespage")
+            text: 'ajustes'
+            pos_hint: {"right": 0.98, "top": 0.15}
+            size_hint: 0.20, 0.13
+
+
+        #Botões
+        GridLayout:
+            cols:2
+            rows:2
+            pos_hint:{"right": 0.9 ,"top": 0.45 }
+            size_hint: 0.8 , 0.25
+            ImageButton:
+                #pos_hint:{"right": 0.6 ,"top": 0.45 }
+                #size_hint: 0.4 , 0.14
+                source:"icones/foto_perfil.png"
+                on_release: app.mudar_tela("agendapage")
+
+            ImageButton:
+                #pos_hint:{"right": 0.9 ,"top": 0.45 }
+                #size_hint: 0.5 , 0.14
+                source:"icones/foto_perfil.png"
+                on_release: app.mudar_tela("estoquepage")
+
+            ImageButton:
+                #pos_hint:{"right": 0.6 ,"top": 0.31 }
+                #size_hint: 0.4 , 0.14
+                source:"icones/foto_perfil.png"
+                on_release: app.mudar_tela("dashboardpage")
+
+            ImageButton:
+                #pos_hint:{"right": 0.9 ,"top": 0.31 }
+                #size_hint: 0.5 , 0.14
+                source:"icones/foto_perfil.png"
+                on_release: app.mudar_tela("perfilclientepage")
+
+
+
+
+
+        #horario
+        GridLayout:
+            pos_hint:{"right": 0.33 ,"top": 0.70 }
+            size_hint: 0.33 , 0.25
+            cols:1
+            rows:1
+
+            Label:
+                bold:True
+                text: f"20/08/2023 - horario"
+                id: id_horario_atual
+
+        #Titulo da proxima cliente
+        Label:
+            pos_hint:{"right": 1 ,"top": 0.70 }
+            size_hint: 0.5 , 0.10
+            bold:True
+            text:"proxima_cliente:"

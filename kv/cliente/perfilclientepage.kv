@@ -1,0 +1,86 @@
+<PerfilClientePage>:
+    FloatLayout:
+    # Banner com o nome da página
+        Label:
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "icones/botao_fino.png"
+            pos_hint:{"right": 1 ,"top": 1 }
+            size_hint:1, 0.15
+            bold: True
+            text:"Perfil Cliente"
+        # Foto de perfil
+        Image:
+            pos_hint:{"right": 1 ,"top": 0.86 }
+            size_hint:1, 0.2
+            source:"icones/fotos_perfil/foto1.png"
+
+        #Botão de escolher cliente
+        Label:
+
+            pos_hint:{"right": 0.30 ,"top": 0.76 }
+            size_hint: 0.2 , 0.20
+            bold: True
+            text:"escolher cliente"
+        # Caixa de informações
+        GridLayout:
+            pos_hint:{"right": 0.9 ,"top": 0.60 }
+            size_hint: 0.8 , 0.45
+            rows: 6
+            cols: 2
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: "icones/bg1.png"
+
+
+            Label:
+                id: nomecliente
+                text:"Nome Completo: Rafael Correia da Silva"
+            Label:
+                id: nascimentocliente
+                text:"Data de Nascimento: 08/08/1992 "
+            Label:
+                id: celularcliente
+                text:"Celular: 11 956919722"
+            Label:
+                id:emailcliente
+                text:"Email: rafaelcorreiasilva@gmail.com "
+            Label:
+                id: enderecocliente
+                text:"Endereço: rua rosa angela borato magalhãs 145"
+
+            Label:
+                id: bairrocliente
+                text: "Bairro: jardim angelica 1"
+            Label:
+                id:cidadecliente
+                text:"Cidada: guarulhos"
+            Label:
+                id:estadocliente
+                text:"Estado: são paulo"
+            Label:
+                id: cepcliente
+                text: "Cep:  07432560"
+         # Botão voltar
+
+        Button:
+        #ImageButton:
+            pos_hint: {"right": 0.2, "top": 0.10}
+            size_hint: 0.18, 0.08
+            text:"voltar"
+            #source: "icones/voltar.png"
+            on_release: app.mudar_tela("inicialpage")
+
+        # Botão cadastrar cliente
+
+        Button:
+            #ImageButton:
+            pos_hint: {"right": 0.98, "top": 0.10}
+            size_hint: 0.2, 0.08
+            text:"Cadastrar Cliente"
+            #source: "icones/voltar.png"
+            on_release: app.mudar_tela("cadastroclientepage")

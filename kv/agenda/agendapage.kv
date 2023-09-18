@@ -1,0 +1,60 @@
+<AgendaPage>:
+    FloatLayout:
+        Label:
+            pos_hint:{"right": 0.67 ,"top": 0.95}
+            size_hint: 0.33,0.10
+            canvas.before:
+                Color:
+                    rgb: utils.get_color_from_hex("#0000ff")
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            text: "Agenda"
+
+        #Scroll Agenda
+        ScrollView:
+            pos_hint:{"right": 0.9 ,"top": 0.75}
+            size_hint: 0.8,0.49
+            GridLayout:
+                cols:1
+                id: agendamento
+                size_hint_y: None
+                spacing: 2,2
+                height: self.minimum_height
+                row_default_height: "90dp"
+                row_force_default: True
+
+
+        # Botões de Agendar e Reagendar
+        GridLayout:
+            rows:1
+            cols:2
+            pos_hint: {"right": 0.9, "top": 0.26}
+            size_hint: 0.8, 0.14
+            Button:
+                text:"Agendar"
+                #source: "icones/settings.png"
+                on_release: app.mudar_tela("agendamentopage")
+            Button:
+                text:"Reagendar/Cancelar"
+                #source: "icones/settings.png"
+                on_release: app.mudar_tela("cancelamentopage")
+
+        # Botãoconfiguração
+        #Button:
+        #ImageButton:
+            #pos_hint: {"right": 0.98, "top": 0.10}
+            #size_hint: 0.20, 0.08
+            #text:"voltar"
+            #source: "icones/settings.png"
+            #on_release: app.mudar_tela("inicialpage")
+
+        # Botão voltar
+        Button:
+        #ImageButton:
+            pos_hint: {"right": 0.2, "top": 0.10}
+            size_hint: 0.18, 0.08
+            text:"voltar"
+            #source: "icones/voltar.png"
+            on_release: app.mudar_tela("inicialpage")
+
