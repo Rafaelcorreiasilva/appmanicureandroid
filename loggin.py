@@ -1,5 +1,8 @@
 import requests
+import certifi
+import os
 
+os.environ["SSL_CERT_FILE"] = certifi.where()
 class Login():
     API_KEY = ""
 
