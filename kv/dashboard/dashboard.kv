@@ -1,12 +1,6 @@
 <DashboardPage>:
     FloatLayout:
-        canvas:
-            #Color:
-                #rgb: utils.get_color_from_hex("#BE3455")
-            Rectangle:
-                size: self.size
-                pos: self.pos
-                source: "icones/bg1.png"
+
         Label:
             pos_hint: {"right": 0.85 , "top": 0.95}
             size_hint: 0.7, 0.2
@@ -14,15 +8,7 @@
 
         # Botão voltar
         FloatLayout:
-            pos_hint: {"right": 1 , "top": 0.12}
-            size_hint: 1, 0.10
-            canvas:
-                Color:
-                    rgb: utils.get_color_from_hex("#006D7E")
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            ImageButton:
+          LabelButton:
                 pos_hint: {"right": 0.2, "top": 0.9}
                 size_hint: 0.20, 0.8
                 source: "icones/voltar.png"

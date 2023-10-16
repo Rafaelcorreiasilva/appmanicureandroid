@@ -1,6 +1,5 @@
 from bancodados import BancoDeDados
 
-
 class Estoque(BancoDeDados):
     def recuperar_fornecedor(self):
          self.query = """
@@ -41,9 +40,9 @@ class Estoque(BancoDeDados):
 
     def total_estoque(self, id):
         self.query = f"""select 
-                      FORMAT(sum((e.valor_unitario * e.quantidade)) - sum(e.quantidade_saida),2) as total_estoque
-                      FROM projeto_faculdade.estoque e	
-                      WHERE e.fk_profissional_id  = '{id}'"""
+                        sum(quantidade * valor_unitario) - sum(quantidade_saida  * valor_unitario )  as total_estoque
+                        FROM projeto_faculdade.estoque 
+                        WHERE fk_profissional_id  = '{id}'"""
         self.cursor.execute(self.query)
         resultado = self.cursor.fetchone()
         return resultado[0]

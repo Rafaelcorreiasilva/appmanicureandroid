@@ -1,6 +1,7 @@
 import requests
 from kivy.app import App
 from banco_dados_cadastro_profissional import CadastroProfissional
+
 class Myfirebase():
     API_KEY="AIzaSyD9RKSbnABUsYOMM4dyzEBWt9bPL3eyusU"
 
@@ -17,7 +18,7 @@ class Myfirebase():
             mensagem , valida_cpf,cpf_tratado = self.bancodados.validar_dados(cpf)
 
             if valida_cpf:
-                print('cpf valido')
+
                 requisicao = requests.post(link, data=info)
                 requisicao_dic = requisicao.json()
 
@@ -106,7 +107,7 @@ class Myfirebase():
             "grant_type": "refresh_token",
             "refresh_token": refresh_token
         }
-        requisicao = requests.post(link,data=info)
+        requisicao = requests.post(link, data=info)
         requisicao_dic = requisicao.json()
         local_id = requisicao_dic['user_id']
         id_token = requisicao_dic['id_token']

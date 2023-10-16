@@ -5,13 +5,13 @@ from kivy.app import App
 class CadastroCliente(BancoDeDados):
     def insert_banco(self, values):
         self.query = """INSERT INTO projeto_faculdade.clientes
-        (nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, pais, cpf, criacao_conta, whatapp_contato, foto_cliente, fk_profissional_id)
-        VALUES(%s, %s, %s, %s, %s, %s, %s, 'Brasil', %s, CURRENT_TIMESTAMP, %s, '0', %s);
+        (nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatapp_contato, fk_profissional_id)
+        VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
 
         self.cursor.execute(self.query, values)
         self.db.commit()
-        self.fechar_conexao()
+
         print('cadastrado')
 
 
@@ -100,16 +100,25 @@ class CadastroCliente(BancoDeDados):
         else:
             return False
 
-    def cadastrar_cliente(self,nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp,id_profissional):
+
+    def cadastrar_cliente(self,nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp,id):
+
         self.validando_dados= self.existe_dados_sem_preencher(nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp)
         if self.validando_dados == False:
             self.teste, self.cpf_valido = self.validar_cpf(cpf)
             if self.teste:
                 if not self.existe_cpf(self.cpf_valido):
                     if self.validar_email(email):
-                        self.insert_banco((nome_completo, email, endereco, bairro, data_nascimento, cidade, estado,self.cpf_valido, whatsapp,id_profissional))
-                        meu_aplicativo = App.get_running_app()
-                        meu_aplicativo.mudar_tela("perfilclientepage")
+                        nome_completo = nome_completo.strip()
+                        email = email.strip()
+                        endereco = endereco.strip()
+                        bairro = bairro.strip()
+                        data_nascimento = data_nascimento.strip()
+                        cidade = cidade.strip()
+                        estado = estado.strip()
+                        info = (nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, self.cpf_valido, whatsapp,id )
+                        self.insert_banco(info)
+
                     else:
                         meu_aplicativo = App.get_running_app()
                         pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
@@ -134,8 +143,10 @@ class CadastroCliente(BancoDeDados):
             pagina_login.ids["mensagem_cadastro"].color = (1, 0, 0, 1)
 
 class DadosCliente(BancoDeDados):
-    def recuperar_dados(self):
-        self.query= """select nome_completo, 
+    def recuperar_dados(self, id):
+        self.query= f"""select 
+                        id_cliente,
+                        nome_completo, 
                         email, 
                         endereco, 
                         bairro, 
@@ -144,28 +155,34 @@ class DadosCliente(BancoDeDados):
                         estado, 
                         pais, 
                         cpf, 
-                        whatapp_contato, 
-                        foto_cliente, 
-                        fk_profissional_id 
+                        whatapp_contato                
+                        
                         from projeto_faculdade.clientes 
-                        where fk_profissional_id = 'NoMnYY9OrGRToY8sZqjxOwH6IIz1' 
-                        """
+                        where fk_profissional_id = '{id}' """
 
         self.cursor.execute(self.query)
-        result = self.cursor.fetchone()
-        nome_completo = result[0]
-        email = result[1]
-        endereco = result[2]
-        bairro = result[3]
-        data_nascimento = result[4]
-        cidade = result[5]
-        estado = result[6]
-        pais = result[7]
-        cpf = result[8]
-        whatapp_contato = result[9]
-        foto_cliente = result[10]
-        fk_profissional_id = result[11]
-        return nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, pais, cpf, whatapp_contato, foto_cliente, fk_profissional_id
+        return self.cursor.fetchall()
+
+    def preencher_perfil_cliente(self, id, id_cliente):
+        self.query = f"""select 
+                              id_cliente,
+                              nome_completo, 
+                              email, 
+                              endereco, 
+                              bairro, 
+                              data_nascimento, 
+                              cidade, 
+                              estado, 
+                              pais, 
+                              cpf, 
+                              whatapp_contato                
+
+                              from projeto_faculdade.clientes 
+                              where fk_profissional_id = '{id}' and id_cliente = '{id_cliente}' """
+
+        self.cursor.execute(self.query)
+        return self.cursor.fetchall()
+
 
 
 

@@ -1,29 +1,138 @@
 <AgendamentoPage>:
     FloatLayout:
-        canvas:
-            #Color:
-                #rgb: utils.get_color_from_hex("#BE3455")
-            Rectangle:
-                size: self.size
-                pos: self.pos
-                source: "icones/bg1.png"
-        Label:
-            pos_hint: {"right": 0.85 , "top": 0.95}
-            size_hint: 0.7, 0.2
-            text:"Agendamento"
 
-        # Botão voltar
-        FloatLayout:
-            pos_hint: {"right": 1 , "top": 0.12}
-            size_hint: 1, 0.10
-            canvas:
-                Color:
-                    rgb: utils.get_color_from_hex("#006D7E")
+        Label:
+            pos_hint: {"right": 1 , "top":0.95}
+            size_hint: 1, 0.05
+            text:"Selecione o Cliente"
+            id: selecione_cliente
+
+        ScrollView:
+            pos_hint: {"right":1, "top": 0.80}
+            size_hint: 1, 0.2
+            GridLayout:
+                rows: 1
+                id: agendamento
+                size_hint_x: None
+                #spacing: 3, 3
+                width: self.minimum_width
+                col_default_width: "200dp"
+                col_force_default: True
+
+
+        Label:
+            id: label_data
+            pos_hint: {"right":1, "top": 0.5}
+            size_hint: 1, 0.05
+            bold: True
+            text: ""
+
+        LabelButton:
+            canvas.before:
                 Rectangle:
+                    pos:self.pos
                     size: self.size
-                    pos: self.pos
-            ImageButton:
-                pos_hint: {"right": 0.2, "top": 0.9}
-                size_hint: 0.20, 0.8
-                source: "icones/voltar.png"
-                on_release: app.mudar_tela("agendapage")
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+
+            on_release: app.agendar_cliente()
+            text: "Agendar"
+            pos_hint: {"right": 0.45 , "top": 0.2}
+            size_hint: 0.4, 0.2
+
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            on_release:  app.mudar_tela('agendapage')
+            text: "voltar"
+            pos_hint: {"right": 0.95 , "top": 0.2}
+            size_hint: 0.4, 0.2
+
+         # selecionar unidade
+        GridLayout:
+            rows: 1
+            pos_hint: {"right":0.9, "top": 0.45}
+            size_hint: 0.8, 0.1
+            Label:
+                text: ""
+                id: mensagem_add
+
+
+        Label:
+            pos_hint: {"right":0.33, "top": 0.65}
+            size_hint: 0.15, 0.20
+
+            id: escolher_dia_agendamento
+            text: "Escolha o dia"
+
+        #Dia do Agendamento
+        GridLayout:
+            cols: 1
+            id: dia_agendamento
+            spacing: 3, 3
+            pos_hint: {"right":0.33, "top": 0.50}
+            size_hint: 0.15, 0.20
+
+            TextInput:
+                id: dia
+                hint_text: "Dia - ex: 04"
+            TextInput:
+                id: mes
+                hint_text: "Mês - ex: 04"
+            TextInput:
+                id: ano
+                hint_text: "Ano - ex: 2023"
+
+         # Horário do Agendamento
+        Label:
+            pos_hint: {"right":0.59, "top": 0.65}
+            size_hint: 0.15, 0.20
+            id: horario_agendamento
+            text: "Escolha o Horário"
+        GridLayout:
+            cols: 1
+            spacing: 3, 3
+            pos_hint: {"right":0.59, "top": 0.50}
+            size_hint: 0.15, 0.20
+
+            TextInput:
+                id: hora
+                hint_text: "Horário formato 24h - ex: 14"
+            TextInput:
+                id: minuto
+                hint_text: "Minutos - ex: 00"
+
+
+           # Tipo de servico
+        Label:
+            pos_hint: {"right":0.90, "top": 0.65}
+            size_hint: 0.15, 0.20
+            id: agendamento_servico
+            text: "Escolha o Serviço"
+
+        ScrollView:
+            pos_hint:{"right": 0.9 ,"top": 0.50}
+            size_hint: 0.15,0.20
+            GridLayout:
+                cols: 1
+                id: tipo_servico
+                size_hint_y: None
+                spacing: 3, 3
+                height: self.minimum_height
+                row_default_height: "50dp"
+                row_force_default: True
+
+
+
+
+        GridLayout:
+            rows: 1
+            pos_hint: {"right":0.9, "top": 0.65}
+            size_hint: 0.8, 0.1
+            Label:
+                text: ""
+                id: mensagem_add
+

@@ -6,10 +6,15 @@ from bancodados import BancoDeDados
 from banco_dados_estoque import Estoque
 from banners import BannerAgenda,BannerEstoque
 from banco_dados_cliente import CadastroCliente, DadosCliente
+from banco_dados_profissional import CadastroProfissional
 from myfirebase import Myfirebase
 from functools import partial
-from datetime import date, datetime
+
+from datetime import date, datetime, time
+
 from kivy.clock import Clock
+
+
 
 
 
@@ -19,24 +24,39 @@ class MainApp(App):
     produto = None
     produto_retirada = None
     id_produto_retirada = None
+    id_servico = None
+    id_cliente = None
 
     def build(self):
         self.firebase = Myfirebase()
         self.bancodados = BancoDeDados()
-        self.cadastracliente = CadastroCliente()
-        self.cliente = DadosCliente()
         self.bd_estoque = Estoque()
+        self.bd_cadastro_cliente = CadastroCliente()
+        self.bd_dados_clientes = DadosCliente()
+        self.bd_profissional = CadastroProfissional()
+
 
         return GUI
 
     def on_start(self):
-        self.carregar_infos_usuario()
-        self.carregar_estoque()
+        try:
 
+            self.carregar_infos_usuario()
+
+            self.carregar_estoque()
+
+            self.carregar_clientes_scroll()
+            self.carregar_servicos()
+            self.carregar_agenda()
+
+        except:
+            estoque = self.root.ids["estoquepage"]
+            estoque.ids["total_estoque"].text = f'Total no estoque R$ 0.0'
         #carregar datas
         pagina_entradaretirada = self.root.ids["entradapage"]
         label_data = pagina_entradaretirada.ids["label_data"]
         label_data.text = f"Data: {date.today().strftime('%d/%m/%Y')}"
+
         # Exibir a hora atual em um Label
         pagina_inicialpage = self.root.ids["inicialpage"]
         label_hora_atual = pagina_inicialpage.ids["id_horario_atual"]
@@ -47,6 +67,181 @@ class MainApp(App):
         hora_atual = datetime.now().strftime('%H:%M')
         data_atual = date.today().strftime('%d/%m/%Y')
         label.text = f"Data: {data_atual} \n Horário: {hora_atual}"
+
+
+
+    def carregar_servicos(self):
+        agendamento_pagina = self.root.ids["agendamentopage"]
+        servicos = agendamento_pagina.ids["tipo_servico"]
+        servicos_lista =self.bd_profissional.carregar_servicos()
+
+        for iten in list(servicos.children):
+            servicos.remove_widget(iten)
+        for servico in servicos_lista:
+            id_servico = servico[0]
+            info = servico[1]
+
+            label = LabelButton(text=info,
+                                 on_release=partial(self.selecionar_servico, info, id_servico))
+
+            servicos.add_widget(label)
+
+    def selecionar_servico(self,servico,id_servico, *args):
+        self.id_servico=id_servico
+
+        # pintar de branco todas as outras
+        agendamento_pagina = self.root.ids["agendamentopage"]
+        servicos = agendamento_pagina.ids["tipo_servico"]
+        for item in list(servicos.children):
+            item.color = (1, 1, 1, 1)
+            # pintar de azul o item que selecionamos
+            texto = item.text
+
+            if texto == servico:
+                item.color = (0, 207 / 255, 219 / 255, 1)
+
+
+    def carregar_clientes_scroll(self):
+
+
+        lista_clientes = self.bd_dados_clientes.recuperar_dados(self.local_id)
+
+        pagina_perfil_cliente = self.root.ids["perfilclientepage"]
+        perfil_cliente = pagina_perfil_cliente.ids["escolher_cliente"]
+
+        agendamento_pagina = self.root.ids["agendamentopage"]
+        agendamento_clientes = agendamento_pagina.ids["agendamento"]
+
+
+        for iten in list(perfil_cliente.children):
+            perfil_cliente.remove_widget(iten)
+            agendamento_clientes.remove_widget(iten)
+
+        for cliente in lista_clientes:
+            id_cliente = cliente[0]
+            nome_completo = cliente[1]
+
+            if nome_completo:
+                nome_completo_fatiado = nome_completo.split()
+                primeiro_nome = nome_completo_fatiado[0]
+                segundo_nome = nome_completo_fatiado[1]
+            else:
+                nome_completo = ''
+
+
+            info = f"{primeiro_nome}\n{segundo_nome}"
+
+            label1 = LabelButton(text=info,
+                                 on_release=partial(self.selecionar_cliente, info, id_cliente))
+
+            label2 = LabelButton(text=info,
+                                 on_release=partial(self.selecionar_cliente_agenda, info, id_cliente))
+
+            perfil_cliente.add_widget(label1)
+            agendamento_clientes.add_widget(label2)
+
+    def recuperar_dados_cliente(self, id_cliente):
+        cliente = self.bd_dados_clientes.preencher_perfil_cliente(self.local_id, id_cliente)
+        cliente = cliente[0]
+
+        id_cliente = cliente[0]
+        nome_completo = cliente[1]
+        email = cliente[2]
+        endereco = cliente[3]
+        bairro = cliente[4]
+        data_nascimento = cliente[5]
+        cidade = cliente[6]
+        estado = cliente[7]
+        pais = cliente[8]
+        cpf = cliente[9]
+        whatapp_contato = cliente[10]
+
+        if nome_completo:
+            pass
+        else:
+            nome_completo = ''
+        nome_completo = nome_completo.capitalize()
+
+        if email:
+            pass
+        else:
+            email = ''
+        if endereco:
+            pass
+        else:
+         endereco = ''
+        if bairro:
+            pass
+        else:
+            bairro = ''
+
+        if data_nascimento:
+            pass
+        else:
+            data_nascimento = ''
+        if cidade:
+            pass
+        else:
+            cidade = ''
+        if estado:
+            pass
+        else:
+            estado = ''
+        if pais:
+            pass
+        else:
+            pais = ''
+        if cpf:
+            pass
+        else:
+            cpf = ''
+        if whatapp_contato:
+            pass
+        else:
+            whatapp_contato = ''
+
+
+        perfil_cliente_pagina = self.root.ids["perfilclientepage"]
+        perfil_cliente_pagina.ids["nomecliente"].text = f"Nome : {nome_completo}"
+        perfil_cliente_pagina.ids["nascimentocliente"].text = f"Data de Nascimento : {data_nascimento}"
+        perfil_cliente_pagina.ids["celularcliente"].text = f"Celular : {whatapp_contato}"
+        perfil_cliente_pagina.ids["emailcliente"].text = f"Email : {email}"
+        perfil_cliente_pagina.ids["enderecocliente"].text = f"Endereço : {endereco}"
+        perfil_cliente_pagina.ids["bairrocliente"].text = f"Bairro : {bairro}"
+        perfil_cliente_pagina.ids["cidadecliente"].text = f"Cidade : {cidade}"
+        perfil_cliente_pagina.ids["estadocliente"].text = f"Estado: : {estado}"
+
+    def selecionar_cliente(self, cliente, id_cliente, *args):
+        self.id_cliente = id_cliente
+        pagina_perfil_cliente = self.root.ids["perfilclientepage"]
+        perfil_cliente = pagina_perfil_cliente.ids["escolher_cliente"]
+
+
+        # pintar de branco todas as outras
+
+        for item in list(perfil_cliente.children):
+            item.color = (1, 1, 1, 1)
+            # pintar de azul o item que selecionamos
+            texto = item.text
+
+            if texto == cliente:
+                item.color = (0, 207 / 255, 219 / 255, 1)
+                self.recuperar_dados_cliente(id_cliente)
+
+    def selecionar_cliente_agenda(self, cliente,id_cliente, *args):
+        self.id_cliente = id_cliente
+        agendamento_pagina = self.root.ids["agendamentopage"]
+        perfil_cliente = agendamento_pagina.ids["agendamento"]
+
+        # pintar de branco todas as outras
+
+        for item in list(perfil_cliente.children):
+            item.color = (1, 1, 1, 1)
+            # pintar de azul o item que selecionamos
+            texto = item.text
+            if texto == cliente:
+                item.color = (0, 207 / 255, 219 / 255, 1)
+
 
     def carregar_estoque_retirada(self):
         lista_produtos = self.bd_estoque.recuperar_produtos()
@@ -77,6 +272,8 @@ class MainApp(App):
             label1 = LabelButton(text=produtos_lista1,
                                  on_release=partial(self.selecionar_produto_retirada, produtos_lista1, id_produto))
             produtos_retirada.add_widget(label1)
+
+
 
     def carregar_fornecedores_entrada(self):
         pagina_entrada = self.root.ids["entradapage"]
@@ -149,6 +346,39 @@ class MainApp(App):
 
         except Exception as e:
             print(e)
+    def carregar_agenda(self):
+
+        agenda = self.root.ids["agendapage"].ids["agenda_lista"]
+        for iten in list(agenda.children):
+            agenda.remove_widget(iten)
+        agenda_bd = self.bd_profissional
+        agenda_horario = agenda_bd.carregar_agenda(self.local_id)
+        for iten in agenda_horario:
+            id_agenda=iten[0]
+            nome_completo = iten[4]
+            data = iten[1]
+            horario = iten[2]
+            tipo_servico = iten[3]
+            info = f'{nome_completo} -- {horario} -- {data} -- {tipo_servico}'
+            print(info)
+            label = LabelButton(text=info,
+                                on_release=partial(self.selecionar_cliente_agenda_cancelar, info, id_agenda))
+            agenda.add_widget(label)
+
+    def selecionar_cliente_agenda_cancelar(self, cliente, id_agenda, *args):
+        self.id_agenda = id_agenda
+        agenda = self.root.ids["agendapage"].ids["agenda_lista"]
+
+        # pintar de branco todas as outras
+
+        for item in list(agenda.children):
+            item.color = (1, 1, 1, 1)
+            # pintar de azul o item que selecionamos
+            texto = item.text
+
+            if texto == cliente:
+                item.color = (0, 207 / 255, 219 / 255, 1)
+
     def carregar_estoque(self):
         estoque = self.root.ids["estoquepage"].ids["estoque_lista"]
         for iten in list(estoque.children):
@@ -162,9 +392,17 @@ class MainApp(App):
             quantidade_estoque = itens[1]
             quantidade_saida = itens[2]
             quantidade_total = int(quantidade_estoque) - int(quantidade_saida)
-            banner_estoque = BannerEstoque(quantidade=quantidade_total, fk_id_produto_estoque=nome_produto)
-            estoque.add_widget(banner_estoque)
+            if quantidade_total > 0:
+                banner_estoque = BannerEstoque(quantidade=quantidade_total, fk_id_produto_estoque=nome_produto)
+                estoque.add_widget(banner_estoque)
+            else:
+                pass
+
         total_estoque = self.bd_estoque.total_estoque(self.local_id)
+        if not total_estoque:
+            total_estoque = 0.0
+        else:
+            pass
         pagina_entradaretirada = self.root.ids["estoquepage"]
         pagina_entradaretirada.ids["total_estoque"].text = f'Total no estoque R$ {total_estoque}'
         self.carregar_produtos_entrada()
@@ -266,6 +504,132 @@ class MainApp(App):
 
         self.produto_retirada = None
         self.id_produto_retirada = None
+
+    def agendar_cliente(self):
+        pagina_agenda = self.root.ids["agendamentopage"]
+        id_cliente = self.id_cliente
+        dia = pagina_agenda.ids["dia"].text
+        mes = pagina_agenda.ids["mes"].text
+        ano = pagina_agenda.ids["ano"].text
+        hora = pagina_agenda.ids["hora"].text
+        minuto = pagina_agenda.ids["minuto"].text
+        servico = self.id_servico
+
+        if not id_cliente:
+            pagina_agenda.ids["selecione_cliente"].color = (1, 0, 0, 1)
+        if dia:
+            try:
+                dia = int(dia)
+                if dia > 31:
+                    pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+
+
+            except:
+                pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+        else:
+            pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+
+
+        if mes:
+            try:
+                mes = int(mes)
+                if mes > 12:
+                    pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+            except:
+                pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+        else:
+            pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+
+
+        if ano:
+            try:
+                 ano = int(ano)
+                 if ano < int(datetime.now().year):
+                    pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+            except:
+                    pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+        else:
+            pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+
+
+        if hora:
+            try:
+                hora = int(hora)
+                if hora > 23:
+                    pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+            except:
+                pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+        else:
+            pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+
+
+        if minuto:
+                try:
+                    minuto = int(minuto)
+                    if minuto > 59:
+                        pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+                except:
+                    pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+        else:
+            pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+
+        if not servico:
+            pagina_agenda.ids["agendamento_servico"].color = (1, 0, 0, 1)
+
+
+        if servico and minuto \
+                and type(minuto) == int and hora \
+                and type(hora) == int \
+                and type(mes) == int and mes and ano \
+                and type(ano) == int and dia \
+                and type(dia) == int and id_cliente\
+                and minuto < 60 and hora < 23 and ano >= int(datetime.now().year) \
+                and mes < 13 and dia < 32:
+
+            id_cliente = self.id_cliente
+            id_servico = self.id_servico
+            id_profissional = self.local_id
+            horario = time(hora, minuto)
+            data = date(ano, mes, dia)
+
+            info = (data,horario,id_servico,id_cliente,id_profissional)
+            self.bd_profissional.agendar(info)
+            pagina_agenda = self.root.ids["agendamentopage"]
+            agedamento = pagina_agenda.ids['agendamento']
+            tipo_servico = pagina_agenda.ids['tipo_servico']
+            for item in list(agedamento.children):
+                item.color = (1, 1, 1, 1)
+            for item in list(tipo_servico.children):
+                item.color = (1, 1, 1, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Agendado com sucesso'
+            mensagem.color = (0, 207/255, 219/255, 1)
+
+        else:
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Erro ao tentar agendar tente novamente'
+            mensagem.color = (1, 0, 0, 1)
+            # pintar tudo de branco denovo
+            pagina_agenda = self.root.ids["agendamentopage"]
+            agedamento = pagina_agenda.ids['agendamento']
+            tipo_servico = pagina_agenda.ids['tipo_servico']
+            pagina_agenda.ids["dia"].text = ''
+            pagina_agenda.ids["mes"].text = ''
+            pagina_agenda.ids["ano"].text = ''
+            pagina_agenda.ids["hora"].text= ''
+            pagina_agenda.ids["minuto"].text = ''
+            for item in list(agedamento.children):
+                item.color = (1, 1, 1, 1)
+            for item in list(tipo_servico.children):
+                item.color = (1, 1, 1, 1)
+
+        self.id_cliente = None
+        self.id_servico = None
+
+
+
     def entrada_produto(self):
 
         fornecedor = self.fornecedor
@@ -294,6 +658,7 @@ class MainApp(App):
                 quantidade = int(quantidade)
             except:
                 pagina_entrada.ids["text_quantidade"].color = (1, 0, 0, 1)
+
 
         #dado que ele preencheu tudo vamos popular a tabela
         if fornecedor and produto and preco and quantidade and type(preco) == float and type(quantidade) == int:
@@ -339,5 +704,9 @@ class MainApp(App):
 
         self.fornecedor = None
         self.produto = None
+
+
+    def cadastrar_cliente(self, nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp):
+        self.bd_cadastro_cliente.cadastrar_cliente(nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp, self.local_id)
 
 MainApp().run()

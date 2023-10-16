@@ -1,10 +1,6 @@
 <CadastroPage>:
     FloatLayout:
-        canvas:
-            Rectangle:
-                size: self.size
-                pos: self.pos
-                source: "icones/bg1.png"
+
 
         Label:
             pos_hint: {"right": 0.85 , "top": 0.95}
@@ -75,7 +71,7 @@
                     size: self.size
                     source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
 
-            on_release:print("fazer login")
+            on_release:app.mudar_tela("loginpage")
             text: "Faça seu Login"
             pos_hint: {"right": 0.45 , "top": 0.16}
             size_hint: 0.4, 0.10
