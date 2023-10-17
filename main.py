@@ -5,7 +5,7 @@ from botoes import *
 from bancodados import BancoDeDados
 from banco_dados_estoque import Estoque
 from banners import BannerAgenda,BannerEstoque
-from banco_dados_cliente import CadastroCliente, DadosCliente
+from banco_dados_cliente import Cliente
 from banco_dados_profissional import CadastroProfissional
 from myfirebase import Myfirebase
 from functools import partial
@@ -31,8 +31,8 @@ class MainApp(App):
         self.firebase = Myfirebase()
         self.bancodados = BancoDeDados()
         self.bd_estoque = Estoque()
-        self.bd_cadastro_cliente = CadastroCliente()
-        self.bd_dados_clientes = DadosCliente()
+        self.bd_cadastro_cliente = Cliente()
+        self.bd_dados_clientes = Cliente()
         self.bd_profissional = CadastroProfissional()
 
 
@@ -42,9 +42,7 @@ class MainApp(App):
         try:
 
             self.carregar_infos_usuario()
-
             self.carregar_estoque()
-
             self.carregar_clientes_scroll()
             self.carregar_servicos()
             self.carregar_agenda()
@@ -102,13 +100,11 @@ class MainApp(App):
 
 
     def carregar_clientes_scroll(self):
-
-
-        lista_clientes = self.bd_dados_clientes.recuperar_dados(self.local_id)
+        banco = Cliente()
+        lista_clientes = banco.recuperar_dados(self.local_id)
 
         pagina_perfil_cliente = self.root.ids["perfilclientepage"]
         perfil_cliente = pagina_perfil_cliente.ids["escolher_cliente"]
-
         agendamento_pagina = self.root.ids["agendamentopage"]
         agendamento_clientes = agendamento_pagina.ids["agendamento"]
 
@@ -117,14 +113,20 @@ class MainApp(App):
             perfil_cliente.remove_widget(iten)
             agendamento_clientes.remove_widget(iten)
 
+
         for cliente in lista_clientes:
+
             id_cliente = cliente[0]
             nome_completo = cliente[1]
 
             if nome_completo:
                 nome_completo_fatiado = nome_completo.split()
-                primeiro_nome = nome_completo_fatiado[0]
-                segundo_nome = nome_completo_fatiado[1]
+                if len(nome_completo_fatiado) >= 2:
+                    primeiro_nome = nome_completo_fatiado[0]
+                    segundo_nome = nome_completo_fatiado[1]
+                else:
+                    primeiro_nome = nome_completo
+                    segundo_nome = ''
             else:
                 nome_completo = ''
 
@@ -140,9 +142,12 @@ class MainApp(App):
             perfil_cliente.add_widget(label1)
             agendamento_clientes.add_widget(label2)
 
+
+
     def recuperar_dados_cliente(self, id_cliente):
-        cliente = self.bd_dados_clientes.preencher_perfil_cliente(self.local_id, id_cliente)
-        cliente = cliente[0]
+        bd = Cliente()
+        clientes = bd.preencher_perfil_cliente(self.local_id, id_cliente)
+        cliente = clientes[0]
 
         id_cliente = cliente[0]
         nome_completo = cliente[1]
@@ -344,8 +349,9 @@ class MainApp(App):
             self.mudar_tela("inicialpage")
             self.carregar_estoque()
 
+
         except Exception as e:
-            print(e)
+           pass
     def carregar_agenda(self):
 
         agenda = self.root.ids["agendapage"].ids["agenda_lista"]
@@ -360,7 +366,6 @@ class MainApp(App):
             horario = iten[2]
             tipo_servico = iten[3]
             info = f'{nome_completo} -- {horario} -- {data} -- {tipo_servico}'
-            print(info)
             label = LabelButton(text=info,
                                 on_release=partial(self.selecionar_cliente_agenda_cancelar, info, id_agenda))
             agenda.add_widget(label)
@@ -708,5 +713,6 @@ class MainApp(App):
 
     def cadastrar_cliente(self, nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp):
         self.bd_cadastro_cliente.cadastrar_cliente(nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp, self.local_id)
+        self.carregar_clientes_scroll()
 
 MainApp().run()

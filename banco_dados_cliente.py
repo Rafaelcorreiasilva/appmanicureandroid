@@ -2,7 +2,8 @@ from bancodados import BancoDeDados
 import re
 from kivy.app import App
 
-class CadastroCliente(BancoDeDados):
+
+class Cliente(BancoDeDados):
     def insert_banco(self, values):
         self.query = """INSERT INTO projeto_faculdade.clientes
         (nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatapp_contato, fk_profissional_id)
@@ -11,8 +12,6 @@ class CadastroCliente(BancoDeDados):
 
         self.cursor.execute(self.query, values)
         self.db.commit()
-
-        print('cadastrado')
 
 
 
@@ -100,50 +99,70 @@ class CadastroCliente(BancoDeDados):
         else:
             return False
 
+    def verifica_celular(self, celular):
+        if len(celular) == 11:
+            try:
+                int(celular)
+                return True
+
+            except:
+                return False
+        else:
+            return False
+
 
     def cadastrar_cliente(self,nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp,id):
 
         self.validando_dados= self.existe_dados_sem_preencher(nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, cpf, whatsapp)
         if self.validando_dados == False:
-            self.teste, self.cpf_valido = self.validar_cpf(cpf)
-            if self.teste:
-                if not self.existe_cpf(self.cpf_valido):
-                    if self.validar_email(email):
-                        nome_completo = nome_completo.strip()
-                        email = email.strip()
-                        endereco = endereco.strip()
-                        bairro = bairro.strip()
-                        data_nascimento = data_nascimento.strip()
-                        cidade = cidade.strip()
-                        estado = estado.strip()
-                        info = (nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, self.cpf_valido, whatsapp,id )
-                        self.insert_banco(info)
+            if self.verifica_celular(whatsapp) == True:
+                self.teste, self.cpf_valido = self.validar_cpf(cpf)
+                if self.teste:
+                    if not self.existe_cpf(self.cpf_valido):
+                        if self.validar_email(email):
+                            nome_completo = nome_completo.strip()
+                            email = email.strip()
+                            endereco = endereco.strip()
+                            bairro = bairro.strip()
+                            data_nascimento = data_nascimento.strip()
+                            cidade = cidade.strip()
+                            estado = estado.strip()
+                            info = (nome_completo, email, endereco, bairro, data_nascimento, cidade, estado, self.cpf_valido, whatsapp,id )
+                            self.insert_banco(info)
+                            meu_aplicativo = App.get_running_app()
+                            pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
+                            pagina_login.ids["mensagem_cadastro"].text = 'cadastrado com sucesso'
+                            pagina_login.ids["mensagem_cadastro"].color = (0, 207 / 255, 219 / 255, 1)
+                        else:
+                            meu_aplicativo = App.get_running_app()
+                            pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
+                            pagina_login.ids["mensagem_cadastro"].text = 'email inválido'
+                            pagina_login.ids["mensagem_cadastro"].color = (1, 0, 0, 1)
 
                     else:
                         meu_aplicativo = App.get_running_app()
                         pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
-                        pagina_login.ids["mensagem_cadastro"].text = 'email inválido'
+                        pagina_login.ids["mensagem_cadastro"].text = 'cliente ja cadastrado'
                         pagina_login.ids["mensagem_cadastro"].color = (1, 0, 0, 1)
-
                 else:
                     meu_aplicativo = App.get_running_app()
                     pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
-                    pagina_login.ids["mensagem_cadastro"].text = 'cliente ja cadastrado'
+                    pagina_login.ids["mensagem_cadastro"].text = 'cpf inválido'
                     pagina_login.ids["mensagem_cadastro"].color = (1, 0, 0, 1)
             else:
                 meu_aplicativo = App.get_running_app()
                 pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
-                pagina_login.ids["mensagem_cadastro"].text = 'cpf inválido'
+                pagina_login.ids["mensagem_cadastro"].text = 'celular invalido'
                 pagina_login.ids["mensagem_cadastro"].color = (1, 0, 0, 1)
-
         else:
             meu_aplicativo = App.get_running_app()
             pagina_login = meu_aplicativo.root.ids["cadastroclientepage"]
             pagina_login.ids["mensagem_cadastro"].text = self.validando_dados
             pagina_login.ids["mensagem_cadastro"].color = (1, 0, 0, 1)
 
-class DadosCliente(BancoDeDados):
+
     def recuperar_dados(self, id):
+
         self.query= f"""select 
                         id_cliente,
                         nome_completo, 
@@ -182,6 +201,7 @@ class DadosCliente(BancoDeDados):
 
         self.cursor.execute(self.query)
         return self.cursor.fetchall()
+
 
 
 
