@@ -522,64 +522,120 @@ class MainApp(App):
 
         if not id_cliente:
             pagina_agenda.ids["selecione_cliente"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione o Cliente'
         if dia:
             try:
+                dia = dia.strip()
                 dia = int(dia)
                 if dia > 31:
                     pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+                    pagina_agenda = self.root.ids['agendamentopage']
+                    mensagem = pagina_agenda.ids['mensagem_add']
+                    mensagem.text = f'No Máximo 31 dias'
 
 
             except:
+                pagina_agenda = self.root.ids['agendamentopage']
+                mensagem = pagina_agenda.ids['mensagem_add']
+                mensagem.text = f'Somente numeros'
                 pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
         else:
             pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione um dia'
 
 
         if mes:
             try:
+                mes=mes.strip()
                 mes = int(mes)
                 if mes > 12:
                     pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+                    pagina_agenda = self.root.ids['agendamentopage']
+                    mensagem = pagina_agenda.ids['mensagem_add']
+                    mensagem.text = f'Ano possui apenas 12 meses'
             except:
                 pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+                pagina_agenda = self.root.ids['agendamentopage']
+                mensagem = pagina_agenda.ids['mensagem_add']
+                mensagem.text = f'Apenas numeros'
         else:
             pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione um mes de 1 a 12'
 
 
         if ano:
             try:
-                 ano = int(ano)
-                 if ano < int(datetime.now().year):
+                ano = ano.strip()
+                ano = int(ano)
+                if ano < int(datetime.now().year):
                     pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+                    pagina_agenda = self.root.ids['agendamentopage']
+                    mensagem = pagina_agenda.ids['mensagem_add']
+                    mensagem.text = f'Não pode anos passados'
             except:
-                    pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+                pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+                pagina_agenda = self.root.ids['agendamentopage']
+                mensagem = pagina_agenda.ids['mensagem_add']
+                mensagem.text = f'Apenas numeros com 4 digitos ex: 2023'
         else:
             pagina_agenda.ids["escolher_dia_agendamento"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione um ano'
 
 
         if hora:
             try:
+                hora = hora.strip()
                 hora = int(hora)
                 if hora > 23:
                     pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+                    pagina_agenda = self.root.ids['agendamentopage']
+                    mensagem = pagina_agenda.ids['mensagem_add']
+                    mensagem.text = f'Apenas horario ate 23 horas'
             except:
                 pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+                pagina_agenda = self.root.ids['agendamentopage']
+                mensagem = pagina_agenda.ids['mensagem_add']
+                mensagem.text = f'Apenas numeros'
         else:
             pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione um horario'
 
 
         if minuto:
                 try:
+                    minuto = minuto.strip()
                     minuto = int(minuto)
                     if minuto > 59:
                         pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+                        pagina_agenda = self.root.ids['agendamentopage']
+                        mensagem = pagina_agenda.ids['mensagem_add']
+                        mensagem.text = f'Uma hora tem no maximo 59 minutos'
                 except:
                     pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+                    pagina_agenda = self.root.ids['agendamentopage']
+                    mensagem = pagina_agenda.ids['mensagem_add']
+                    mensagem.text = f'Apenas numeros com dois digitos ex 04'
         else:
             pagina_agenda.ids["horario_agendamento"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione os minutos'
 
         if not servico:
             pagina_agenda.ids["agendamento_servico"].color = (1, 0, 0, 1)
+            pagina_agenda = self.root.ids['agendamentopage']
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione um serviço'
 
 
         if servico and minuto \
@@ -588,7 +644,7 @@ class MainApp(App):
                 and type(mes) == int and mes and ano \
                 and type(ano) == int and dia \
                 and type(dia) == int and id_cliente\
-                and minuto < 60 and hora < 23 and ano >= int(datetime.now().year) \
+                and minuto < 60 and hora < 24 and ano >= int(datetime.now().year) \
                 and mes < 13 and dia < 32:
 
             id_cliente = self.id_cliente
@@ -598,23 +654,44 @@ class MainApp(App):
             data = date(ano, mes, dia)
 
             info = (data,horario,id_servico,id_cliente,id_profissional)
-            self.bd_profissional.agendar(info)
-            pagina_agenda = self.root.ids["agendamentopage"]
-            agedamento = pagina_agenda.ids['agendamento']
-            tipo_servico = pagina_agenda.ids['tipo_servico']
-            for item in list(agedamento.children):
-                item.color = (1, 1, 1, 1)
-            for item in list(tipo_servico.children):
-                item.color = (1, 1, 1, 1)
-            pagina_agenda = self.root.ids['agendamentopage']
-            mensagem = pagina_agenda.ids['mensagem_add']
-            mensagem.text = f'Agendado com sucesso'
-            mensagem.color = (0, 207/255, 219/255, 1)
+            agendamento = self.bd_profissional.agendar(info)
+            if agendamento == 'agendado':
+                pagina_agenda = self.root.ids["agendamentopage"]
+                agedamento = pagina_agenda.ids['agendamento']
+                tipo_servico = pagina_agenda.ids['tipo_servico']
+                for item in list(agedamento.children):
+                    item.color = (1, 1, 1, 1)
+                for item in list(tipo_servico.children):
+                    item.color = (1, 1, 1, 1)
+                pagina_agenda = self.root.ids['agendamentopage']
+                mensagem = pagina_agenda.ids['mensagem_add']
+                mensagem.text = f'Agendado com sucesso'
+                mensagem.color = (0, 207/255, 219/255, 1)
+            else:
+                pagina_agenda = self.root.ids['agendamentopage']
+                mensagem = pagina_agenda.ids['mensagem_add']
+                mensagem.text = agendamento
+                mensagem.color = (1, 0, 0, 1)
+                # pintar tudo de branco denovo
+                pagina_agenda = self.root.ids["agendamentopage"]
+                agedamento = pagina_agenda.ids['agendamento']
+                tipo_servico = pagina_agenda.ids['tipo_servico']
+                pagina_agenda.ids["dia"].text = ''
+                pagina_agenda.ids["mes"].text = ''
+                pagina_agenda.ids["ano"].text = ''
+                pagina_agenda.ids["hora"].text = ''
+                pagina_agenda.ids["minuto"].text = ''
+                for item in list(agedamento.children):
+                    item.color = (1, 1, 1, 1)
+                for item in list(tipo_servico.children):
+                    item.color = (1, 1, 1, 1)
+
+
 
         else:
             pagina_agenda = self.root.ids['agendamentopage']
             mensagem = pagina_agenda.ids['mensagem_add']
-            mensagem.text = f'Erro ao tentar agendar tente novamente'
+            #mensagem.text = f'Erro ao tentar agendar tente novamente'
             mensagem.color = (1, 0, 0, 1)
             # pintar tudo de branco denovo
             pagina_agenda = self.root.ids["agendamentopage"]
@@ -632,7 +709,7 @@ class MainApp(App):
 
         self.id_cliente = None
         self.id_servico = None
-
+        self.carregar_agenda()
 
 
     def entrada_produto(self):

@@ -70,7 +70,6 @@ class CadastroProfissional(BancoDeDados):
 
       self.cursor.execute(self.query)
       result = self.cursor.fetchone()
-      self.fechar_conexao()
       return bool(result)
 
 
@@ -119,16 +118,43 @@ class CadastroProfissional(BancoDeDados):
 
       return self.cursor.fetchall()
 
+   def verificar_disponibilidade_horario_agenda(self,data,horario,id_profissional):
+
+      data = data
+      horario=horario
+      id_profissional= id_profissional
+
+      self.query  = f"select * from projeto_faculdade.agenda where data = '{data}' and horario = '{horario}' and fk_profissional = '{id_profissional}'"
+
+      self.cursor.execute(self.query)
+
+      lista = self.cursor.fetchall()
+      if len(lista) > 0:
+         return 'Horario Indisponivel'
+
+      else:
+         return 'Horario livre'
+
 
    def agendar(self,values):
-      self.query = """
-      INSERT INTO projeto_faculdade.agenda
-         (data,horario,fk_id_servico,fk_id_cliente,fk_profissional)
-         VALUES(%s, %s, %s,%s,%s)"""
+      dados = values
+      data = dados[0]
+      horario = dados[1]
+      id_servico=dados[2]
+      id_cliente=dados[3]
+      id_profissional =dados[4]
+      horario_livre = self.verificar_disponibilidade_horario_agenda(data,horario,id_profissional)
+      if horario_livre == 'Horario livre':
+         self.query = """
+         INSERT INTO projeto_faculdade.agenda
+            (data,horario,fk_id_servico,fk_id_cliente,fk_profissional)
+            VALUES(%s, %s, %s,%s,%s)"""
 
-      self.cursor.execute(self.query,values)
-      self.db.commit()
-
+         self.cursor.execute(self.query,values)
+         self.db.commit()
+         return 'agendado'
+      else:
+         return horario_livre
 
    def carregar_agenda(self,id_profissional):
       self.query = f"""           
@@ -143,8 +169,14 @@ class CadastroProfissional(BancoDeDados):
              ON fa.fk_id_servico =ts.id_tipo_servico
          INNER JOIN projeto_faculdade.clientes c
              ON c.id_cliente = fa.fk_id_cliente
-         WHERE fk_profissional ='{id_profissional}'"""
+         WHERE fk_profissional ='{id_profissional}' order by fa.data,fa.horario  """
 
       self.cursor.execute(self.query)
 
       return self.cursor.fetchall()
+
+   def deletar_agendamento(self,id_profissional,data,horario,id_cliente):
+      self.query = (f"""delete from projeto_faculdade.agenda where fk_profissional ={id_profissional} and data={data} and horario = {horario} and  fk_id_cliente = {id_cliente}""")
+
+      self.cursor.execute(self.query)
+      self.db.commit()
