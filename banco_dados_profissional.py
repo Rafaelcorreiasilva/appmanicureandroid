@@ -156,7 +156,7 @@ class CadastroProfissional(BancoDeDados):
       else:
          return horario_livre
 
-   def carregar_agenda(self,id_profissional):
+   def carregar_agenda(self, id_profissional):
       self.query = f"""           
          SELECT 
              fa.id_agenda, 
@@ -175,8 +175,8 @@ class CadastroProfissional(BancoDeDados):
 
       return self.cursor.fetchall()
 
-   def deletar_agendamento(self,id_profissional,data,horario,id_cliente):
-      self.query = (f"""delete from projeto_faculdade.agenda where fk_profissional ={id_profissional} and data={data} and horario = {horario} and  fk_id_cliente = {id_cliente}""")
+   def deletar_agendamento(self,id_agenda):
+      self.query = (f"""delete from projeto_faculdade.agenda where id_agenda ={id_agenda} """)
 
       self.cursor.execute(self.query)
       self.db.commit()

@@ -26,6 +26,8 @@ class MainApp(App):
     id_produto_retirada = None
     id_servico = None
     id_cliente = None
+    id_agenda = None
+    cliente = None
 
     def build(self):
         self.firebase = Myfirebase()
@@ -352,6 +354,7 @@ class MainApp(App):
 
         except Exception as e:
            pass
+
     def carregar_agenda(self):
 
         agenda = self.root.ids["agendapage"].ids["agenda_lista"]
@@ -370,8 +373,51 @@ class MainApp(App):
                                 on_release=partial(self.selecionar_cliente_agenda_cancelar, info, id_agenda))
             agenda.add_widget(label)
 
+
+    def cancelar_agenda(self):
+        id_agenda = self.id_agenda
+        cliente = self.cliente
+        agenda = self.root.ids["agendapage"].ids["agenda_lista"]
+
+
+        pagina_agenda = self.root.ids["agendapage"]
+        mensagem = pagina_agenda.ids['mensagem_add']
+        mensagem.text = f' '
+
+
+        if not cliente:
+
+            pagina_agenda = self.root.ids["agendapage"]
+
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Selecione o Cliente -horario- serviço para cancelar'
+            mensagem.color = (1, 0, 0, 1)
+
+        else:
+            bd_cliente = CadastroProfissional()
+            bd_cliente.deletar_agendamento(id_agenda)
+            pagina_agenda = self.root.ids["agendapage"]
+            mensagem = pagina_agenda.ids['mensagem_add']
+            mensagem.text = f'Cancelado com sucesso'
+            mensagem.color = (0, 207/255, 219/255, 1)
+        for item in list(agenda.children):
+            item.color = (1, 1, 1, 1)
+
+
+
+        self.id_cliente = None
+        self.id_servico = None
+        self.carregar_agenda()
+
+        self.carregar_clientes_scroll()
+        self.id_agenda = None
+        self.cliente = None
+
+
+
     def selecionar_cliente_agenda_cancelar(self, cliente, id_agenda, *args):
         self.id_agenda = id_agenda
+        self.cliente = cliente
         agenda = self.root.ids["agendapage"].ids["agenda_lista"]
 
         # pintar de branco todas as outras
@@ -511,6 +557,7 @@ class MainApp(App):
         self.id_produto_retirada = None
 
     def agendar_cliente(self):
+        self.carregar_agenda()
         pagina_agenda = self.root.ids["agendamentopage"]
         id_cliente = self.id_cliente
         dia = pagina_agenda.ids["dia"].text

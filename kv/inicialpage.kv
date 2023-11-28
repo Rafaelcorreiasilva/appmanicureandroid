@@ -37,46 +37,51 @@
 
              # Botãoconfiguração
 
-        LabelButton:
-            canvas.before:
-                Rectangle:
-                    pos:self.pos
-                    size: self.size
-                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
-            on_release: app.mudar_tela("ajustespage")
-            text: 'ajustes'
-            pos_hint: {"right": 0.98, "top": 0.15}
-            size_hint: 0.20, 0.13
+         # LabelButton:
+            #  canvas.before:
+            #      Rectangle:
+                   #   pos:self.pos
+             #        size: self.size
+              #        source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+           #   on_release: app.mudar_tela("ajustespage")
+           #   text: 'ajustes'
+           #   pos_hint: {"right": 0.98, "top": 0.15}
+             # size_hint: 0.20, 0.13
 
 
         #Botões
         GridLayout:
-            cols:2
-            rows:2
+            cols:3
+            rows:1
             pos_hint:{"right": 0.9 ,"top": 0.45 }
             size_hint: 0.8 , 0.25
-            ImageButton:
-                #pos_hint:{"right": 0.6 ,"top": 0.45 }
-                #size_hint: 0.4 , 0.14
-                source:"icones/foto_perfil.png"
+            LabelButton:
+                canvas.before:
+                    Rectangle:
+                        pos:self.pos
+                        size: self.size
+                        source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+                text: 'Agenda'
                 on_release: app.mudar_tela("agendapage")
 
-            ImageButton:
-                #pos_hint:{"right": 0.9 ,"top": 0.45 }
-                #size_hint: 0.5 , 0.14
-                source:"icones/foto_perfil.png"
+            LabelButton:
+                canvas.before:
+                    Rectangle:
+                        pos:self.pos
+                        size: self.size
+                        source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+                text: 'Estoque'
                 on_release: app.mudar_tela("estoquepage")
 
-            ImageButton:
-                #pos_hint:{"right": 0.6 ,"top": 0.31 }
-                #size_hint: 0.4 , 0.14
-                source:"icones/foto_perfil.png"
-                on_release: app.mudar_tela("dashboardpage")
 
-            ImageButton:
-                #pos_hint:{"right": 0.9 ,"top": 0.31 }
-                #size_hint: 0.5 , 0.14
-                source:"icones/foto_perfil.png"
+
+            LabelButton:
+                canvas.before:
+                    Rectangle:
+                        pos:self.pos
+                        size: self.size
+                        source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+                text: 'Perfil Cliente'
                 on_release: app.mudar_tela("perfilclientepage")
 
 

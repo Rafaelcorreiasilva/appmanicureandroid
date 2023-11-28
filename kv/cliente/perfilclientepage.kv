@@ -50,20 +50,27 @@
 
          # Botão voltar
 
-        Button:
-        #ImageButton:
-            pos_hint: {"right": 0.2, "top": 0.10}
-            size_hint: 0.18, 0.08
-            text:"voltar"
-            #source: "icones/voltar.png"
-            on_release: app.mudar_tela("inicialpage")
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
+            on_release:  app.mudar_tela('inicialpage')
+            text: "voltar"
+            pos_hint: {"right": 0.25 , "top": 0.15}
+            size_hint: 0.25, 0.15
 
         # Botão cadastrar cliente
 
-        Button:
-            #ImageButton:
-            pos_hint: {"right": 0.98, "top": 0.10}
-            size_hint: 0.2, 0.08
-            text:"Cadastrar Cliente"
-            #source: "icones/voltar.png"
+
+        LabelButton:
+            canvas.before:
+                Rectangle:
+                    pos:self.pos
+                    size: self.size
+                    source:"icones/botao.png" if self.state == "normal" else "icones/botao_apertado.png"
             on_release: app.mudar_tela("cadastroclientepage")
+            text: "Cadastrar Cliente"
+            pos_hint: {"right": 0.98, "top": 0.15}
+            size_hint: 0.25, 0.15
